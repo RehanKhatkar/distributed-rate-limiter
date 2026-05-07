@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+
+  redis:
+    image: redis:7.2
+    container_name: redis-rate-limiter
+
+    ports:
+      - "6379:6379"
+
+    command: >
+      redis-server
+      --appendonly yes
+      --save 60 1000
+
+    volumes:
+      - redis_data:/data
+
+    restart: unless-stopped
+
+volumes:
+  redis_data:
