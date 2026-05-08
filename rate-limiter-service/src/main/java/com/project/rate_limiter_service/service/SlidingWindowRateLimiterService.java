@@ -1,6 +1,8 @@
 package com.project.rate_limiter_service.service;
 
+import com.project.rate_limiter_service.algorithm.RateLimiterStrategy;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Service;
@@ -10,18 +12,14 @@ import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
-public class SlidingWindowRateLimiterService{
-
+public class SlidingWindowRateLimiterService implements RateLimiterStrategy {
     private final StringRedisTemplate redisTemplate;
-
     private final RedisScript<Long> slidingWindowScript;
-
-    private static final int MAX_REQUESTS = 5;
-
-    private static final int WINDOW_SECONDS = 60;
-
+    @Value("${rate-limiter.sliding-window.max-requests}")
+    private int maxRequests;
+    @Value("${rate-limiter.sliding-window.window-seconds}")
+    private int windowSeconds;
     public boolean isAllowed(String clientId) {
-
         String key = "sliding_window:" + clientId;
 
         long currentTime = Instant.now().getEpochSecond();
@@ -31,10 +29,15 @@ public class SlidingWindowRateLimiterService{
                         slidingWindowScript,
                         Collections.singletonList(key),
                         String.valueOf(currentTime),
-                        String.valueOf(WINDOW_SECONDS),
-                        String.valueOf(MAX_REQUESTS)
+                        String.valueOf(windowSeconds),
+                        String.valueOf(maxRequests)
                 );
 
         return result != null && result == 1;
+    }
+
+    @Override
+    public String getAlgorithmName() {
+        return "SLIDING_WINDOW";
     }
 }
