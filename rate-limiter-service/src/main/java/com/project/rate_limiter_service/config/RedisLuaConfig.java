@@ -9,11 +9,21 @@ public class RedisLuaConfig {
     @Bean
     public DefaultRedisScript<Long> fixedWindowScript() {
         DefaultRedisScript<Long> script = new DefaultRedisScript<>();
-        script.setLocation(
-                new ClassPathResource(
-                        "lua/fixed_window.lua"
-                )
-        );
+        script.setLocation(new ClassPathResource("lua/fixed_window.lua"));
+        script.setResultType(Long.class);
+        return script;
+    }
+    @Bean
+    public DefaultRedisScript<Long> slidingWindowScript() {
+        DefaultRedisScript<Long> script = new DefaultRedisScript<>();
+        script.setLocation(new ClassPathResource("lua/sliding_window.lua"));
+        script.setResultType(Long.class);
+        return script;
+    }
+    @Bean
+    public DefaultRedisScript<Long> tokenBucketScript() {
+        DefaultRedisScript<Long> script = new DefaultRedisScript<>();
+        script.setLocation(new ClassPathResource("lua/token_bucket.lua"));
         script.setResultType(Long.class);
         return script;
     }
