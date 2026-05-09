@@ -4,6 +4,7 @@ services:
 
   redis:
     image: redis:7.2
+
     container_name: redis-rate-limiter
 
     ports:
@@ -16,6 +17,18 @@ services:
 
     volumes:
       - redis_data:/data
+
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:latest
+
+    container_name: nginx-rate-limiter
+
+    network_mode: host
+
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
 
     restart: unless-stopped
 
