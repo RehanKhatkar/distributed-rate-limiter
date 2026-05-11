@@ -6,16 +6,36 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RateLimiterMetrics {
-    private final Counter allowedRequests;
-    private final Counter blockedRequests;
+    private final MeterRegistry registry;
     public RateLimiterMetrics(MeterRegistry registry) {
-        this.allowedRequests = Counter.builder("rate_limiter_allowed_requests_total").description("Total allowed requests").register(registry);
-        this.blockedRequests = Counter.builder("rate_limiter_blocked_requests_total").description("Total blocked requests").register(registry);
+        this.registry = registry;
     }
-    public void incrementAllowed() {
-        allowedRequests.increment();
+    public void incrementAllowed(String algorithm) {
+        Counter.builder(
+                        "rate_limiter_allowed_requests"
+                )
+                .tag(
+                        "algorithm",
+                        algorithm
+                )
+                .description(
+                        "Total allowed requests"
+                )
+                .register(registry)
+                .increment();
     }
-    public void incrementBlocked() {
-        blockedRequests.increment();
+    public void incrementBlocked(String algorithm) {
+        Counter.builder(
+                        "rate_limiter_blocked_requests"
+                )
+                .tag(
+                        "algorithm",
+                        algorithm
+                )
+                .description(
+                        "Total blocked requests"
+                )
+                .register(registry)
+                .increment();
     }
 }

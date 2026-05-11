@@ -46,10 +46,10 @@ public class ConcurrencyTestController {
         for (Future<Boolean> future : futures) {
             if (future.get()) {
                 allowed++;
-                metrics.incrementAllowed();
+                metrics.incrementAllowed(algorithm);
             } else {
                 blocked++;
-                metrics.incrementBlocked();
+                metrics.incrementBlocked(algorithm);
             }
         }
         executorService.shutdown();

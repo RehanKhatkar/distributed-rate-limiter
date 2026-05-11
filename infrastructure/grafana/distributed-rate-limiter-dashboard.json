@@ -5,8 +5,8 @@
     "name": "adg7f8p",
     "namespace": "default",
     "uid": "808241aa-a3d6-49fb-9103-b9f8079305b7",
-    "resourceVersion": "1778451936786018",
-    "generation": 3,
+    "resourceVersion": "1778526396887996",
+    "generation": 5,
     "creationTimestamp": "2026-05-10T22:12:05Z",
     "labels": {
       "grafana.app/deprecatedInternalID": "4461147428360192"
@@ -16,7 +16,7 @@
       "grafana.app/folder": "",
       "grafana.app/saved-from-ui": "Grafana v13.0.1 (a100054f)",
       "grafana.app/updatedBy": "user:cflod1jjs5b7ka",
-      "grafana.app/updatedTimestamp": "2026-05-10T22:25:36Z"
+      "grafana.app/updatedTimestamp": "2026-05-11T19:06:36Z"
     }
   },
   "spec": {
@@ -67,8 +67,8 @@
                       },
                       "spec": {
                         "editorMode": "code",
-                        "expr": "sum(rate(rate_limiter_allowed_requests_total[1m]))",
-                        "legendFormat": "Allowed",
+                        "expr": "sum(\n  rate(rate_limiter_allowed_requests_total[1m])\n) by (algorithm)",
+                        "legendFormat": "Allowed - {{algorithm}}",
                         "range": true
                       }
                     },
@@ -88,9 +88,9 @@
                       },
                       "spec": {
                         "editorMode": "code",
-                        "expr": "sum(rate(rate_limiter_blocked_requests_total[1m]))",
+                        "expr": "sum(\n  rate(rate_limiter_blocked_requests_total[1m])\n) by (algorithm)",
                         "instant": false,
-                        "legendFormat": "Blocked",
+                        "legendFormat": "Blocked - {{algorithm}}",
                         "range": true
                       }
                     },
@@ -207,7 +207,7 @@
                       },
                       "spec": {
                         "editorMode": "code",
-                        "expr": "rate(http_server_requests_seconds_count{\n    status!~\"5..\"\n}[1m])",
+                        "expr": "sum(\n  rate(http_server_requests_seconds_count[1m])\n) by (instance)",
                         "legendFormat": "{{instance}}",
                         "range": true
                       }

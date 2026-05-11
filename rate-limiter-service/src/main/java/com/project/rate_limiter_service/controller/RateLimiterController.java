@@ -18,10 +18,10 @@ public class RateLimiterController {
         RateLimiterStrategy strategy = factory.getStrategy(algorithm.toUpperCase());
         boolean allowed = strategy.isAllowed(clientId);
         if (allowed) {
-            metrics.incrementAllowed();
+            metrics.incrementAllowed(algorithm);
             return "Request Allowed";
         }
-        metrics.incrementBlocked();
+        metrics.incrementBlocked(algorithm);
         return "Rate Limit Exceeded";
     }
 }
